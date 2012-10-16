@@ -258,12 +258,12 @@ module CanCan
         before_filter(options.slice(:only, :except)) do |controller|
           break if options[:if] && !controller.send(options[:if])
           break if options[:unless] && controller.send(options[:unless])
-          controller.authorize! controller.params[:action], controller.params[:controller]
+          controller.authorize! controller.action_name, controller.controller_name
         end
         after_filter(options.slice(:only, :except)) do |controller|
           break if options[:if] && !controller.send(options[:if])
           break if options[:unless] && controller.send(options[:unless])
-          unless controller.current_ability.fully_authorized? controller.params[:action], controller.params[:controller]
+          unless controller.current_ability.fully_authorized? controller.action_name, controller.controller_name
             raise CanCan::InsufficientAuthorizationCheck, "Authorization check is not sufficient for this action. This is probably because you have conditions or attributes defined in Ability and are not checking for them in the action. One way to solve this is adding load_and_authorize_resource to this controller."
           end
         end
